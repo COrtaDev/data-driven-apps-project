@@ -13,11 +13,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(routes);
 
 // Catch unhandled requests and forward to error handler.
-app.use((req, res, next) => {
-    const err = new Error('The requested page couldn\'t be found.');
-    err.status = 404;
-    next(err);
-});
+// app.use((req, res, next) => {
+//     const err = new Error('The requested page couldn\'t be found.');
+//     err.status = 404;
+//     next(err);
+// });
 
 // Custom error handlers.
 // Error handler to log errors.

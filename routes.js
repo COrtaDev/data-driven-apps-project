@@ -27,7 +27,7 @@ router.get('/book/add', csrfProtection, (req, res) => {
   });
 });
 
-router.post('/book/add', csrfProtection, asyncHandler(async (req, res) => {
+router.post('/book/add', csrfProtection, asyncHandler(async (req, res, next) => {
   const {
     title,
     author,
@@ -48,18 +48,18 @@ router.post('/book/add', csrfProtection, asyncHandler(async (req, res) => {
     await book.save();
     res.redirect('/');
   } catch (err) {
-    res.render('book-add', {
-      title: 'Add Book',
-      book,
-      error: err,
-      csrfToken: req.csrfToken(),
-    });
+    if (err.name === 'SequelizeValidationError') {
+      const errors = err.errors.map((error) => error.message);
+      res.render('book-add', {
+        title: 'Add Book',
+        book,
+        errors,
+        csrfToken: req.csrfToken(),
+      });
+    } else {
+      next(err);
+    }
   }
 }));
-
-// router.get('/', (req, res) => {
-//   throw new Error('This is a test error!');
-//   res.render('index', { title: 'Home' });
-// });
 
 module.exports = router;
